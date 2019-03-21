@@ -5,7 +5,7 @@ node('docker') {
   stage('Build & Unit test'){
     sh 'mvn clean verify -DskipITs=true';
     junit '**/target/surefire-reports/TEST-*.xml'
-    archiveArtifacts artifacts: 'target/*.*', allowEmptyArchive: true'
+    archiveArtifacts artifacts: 'target/*.*', allowEmptyArchive: true
   }
   stage('Static Code Analysis'){
     withSonarQubeEnv('Default Sonarqube Server'){
