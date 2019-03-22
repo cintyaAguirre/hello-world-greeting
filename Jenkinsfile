@@ -33,8 +33,7 @@ node('docker') {
 }
 node('docker_pt') {
   stage('Start Tomcat'){
-    sh '''cd /home/jenkins/tomcat/bin 
-    ./startup.sh''';
+    sh 'sh /home/jenkins/tomcat/bin/startup.sh';
   }
   stage ('Deploy '){
     unstash 'binary'
