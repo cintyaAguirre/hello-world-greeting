@@ -49,7 +49,25 @@ node('docker_pt') {
   stage ('Promote build in Artifactory'){
  withCredentials([usernameColonPassword(credentialsId:
     'artifactory-account', variable: 'credentials')]) {
-      sh 'curl -u${credentials} -X PUT "http://172.17.0.1/artifactory/api/storage/example-project/${BUILD_NUMBER}/hello-0.0.1.war?properties=Performance-Tested=Yes"';
+sh 'curl -u${credentials} -X PUT "http://172.17.0.1/artifactory/api/storage/example-project/${BUILD_NUMBER}/hello-0.0.1.war?properties=Performance-Tested=
+Yes"';
     }
  }
+}
+node ('production') {
+  stage ('Deploy to Prod'){
+    def server = Artifactory.server
+    'Default Artifactory Server'
+    def downloadSpec = """{
+      "files": [
+        {
+          "pattern": "example-project/$BUILD_NUMBER/*.zip",
+          "target": "/home/jenkins/tomcat/webapps/"
+          "props": "Performance-Tested=Yes;
+            Integration-Tested=Yes",
+         }
+      ]
+    }""
+    server.download(downloadSpec)
+  }
 }
